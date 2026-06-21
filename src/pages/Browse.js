@@ -326,12 +326,36 @@ function Browse() {
 
               {/* Education */}
               {selectedProfile.fullProfile?.degree && (
-                <div style={{ background: "#fff", borderRadius: "16px", padding: "24px", boxShadow: "0 2px 10px rgba(74,111,165,0.06)" }}>
+                <div style={{ background: "#fff", borderRadius: "16px", padding: "24px", marginBottom: "16px", boxShadow: "0 2px 10px rgba(74,111,165,0.06)" }}>
                   <h3 style={{ fontFamily: "Playfair Display, serif", color: "#1a2540", marginBottom: "12px", paddingBottom: "10px", borderBottom: "2px solid #e8edf5" }}>🎓 Education</h3>
                   <div style={{ background: "#f8fafc", borderRadius: "10px", padding: "16px" }}>
                     <h4 style={{ color: "#1a2540", margin: "0 0 4px" }}>{selectedProfile.fullProfile.degree}</h4>
                     <p style={{ color: "#4a6fa5", fontWeight: "600", fontSize: "14px", margin: "0 0 4px" }}>{selectedProfile.fullProfile.institution}</p>
                     <p style={{ color: "#6b7280", fontSize: "13px", margin: "0" }}>{selectedProfile.fullProfile.startYear} – {selectedProfile.fullProfile.endYear} | CGPA: {selectedProfile.fullProfile.cgpa}</p>
+                  </div>
+                </div>
+              )}
+
+              {/* Contact */}
+              {(selectedProfile.fullProfile?.contactEmail || selectedProfile.fullProfile?.phone) && (
+                <div style={{ background: "#fff", borderRadius: "16px", padding: "24px", boxShadow: "0 2px 10px rgba(74,111,165,0.06)" }}>
+                  <h3 style={{ fontFamily: "Playfair Display, serif", color: "#1a2540", marginBottom: "12px", paddingBottom: "10px", borderBottom: "2px solid #e8edf5" }}>📬 Contact</h3>
+                  <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+                    {selectedProfile.fullProfile?.contactEmail && (
+                      <p style={{ color: "#374151", fontSize: "14px", margin: "0" }}>✉️ {selectedProfile.fullProfile.contactEmail}</p>
+                    )}
+                    {selectedProfile.fullProfile?.phone && (
+                      <p style={{ color: "#374151", fontSize: "14px", margin: "0" }}>📞 {selectedProfile.fullProfile.phone}</p>
+                    )}
+                    {selectedProfile.fullProfile?.linkedin && (
+                      <a href={selectedProfile.fullProfile.linkedin} target="_blank" rel="noreferrer" style={{ color: "#4a6fa5", fontSize: "14px", fontWeight: "600" }}>🔗 LinkedIn</a>
+                    )}
+                    {selectedProfile.fullProfile?.github && (
+                      <a href={selectedProfile.fullProfile.github} target="_blank" rel="noreferrer" style={{ color: "#4a6fa5", fontSize: "14px", fontWeight: "600" }}>🐙 GitHub</a>
+                    )}
+                    {selectedProfile.fullProfile?.website && (
+                      <a href={selectedProfile.fullProfile.website} target="_blank" rel="noreferrer" style={{ color: "#4a6fa5", fontSize: "14px", fontWeight: "600" }}>🌐 Website</a>
+                    )}
                   </div>
                 </div>
               )}
