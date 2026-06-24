@@ -8,7 +8,9 @@ function Profile() {
   const navigate = useNavigate();
   const [showLogout, setShowLogout] = useState(false);
 
-  const saved = JSON.parse(localStorage.getItem("portfolioData") || "{}");
+  // User-specific localStorage key
+  const userKey = `portfolioData_${currentUser?.uid || "guest"}`;
+  const saved = JSON.parse(localStorage.getItem(userKey) || "{}");
 
   const fullName     = saved.fullName     || "";
   const profTitle    = saved.profTitle    || "";

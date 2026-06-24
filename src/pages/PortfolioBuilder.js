@@ -12,8 +12,14 @@ function PortfolioBuilder() {
   const location = useLocation();
   const photoInputRef = useRef(null);
 
+  // User-specific localStorage key
+  const userKey = `portfolioData_${currentUser?.uid || "guest"}`;
+  const draftKey = `draftData_${currentUser?.uid || "guest"}`;
+
   const isEditMode = location.state?.edit === true;
-  const saved = isEditMode ? JSON.parse(localStorage.getItem("portfolioData") || "{}") : JSON.parse(localStorage.getItem("draftData") || "{}");
+  const saved = isEditMode
+    ? JSON.parse(localStorage.getItem(userKey) || "{}")
+    : JSON.parse(localStorage.getItem(draftKey) || "{}");
 
   const [activeSection, setActiveSection] = useState("Basic Info");
   const [showPreview, setShowPreview] = useState(false);
@@ -42,14 +48,11 @@ function PortfolioBuilder() {
 
   const userInitials = currentUser?.email?.slice(0, 2).toUpperCase() || "AS";
 
-  // Photo upload
   function handlePhotoUpload(e) {
     const file = e.target.files[0];
     if (file) {
       const reader = new FileReader();
-      reader.onloadend = () => {
-        setPhoto(reader.result);
-      };
+      reader.onloadend = () => { setPhoto(reader.result); };
       reader.readAsDataURL(file);
     }
   }
@@ -59,7 +62,6 @@ function PortfolioBuilder() {
     if (photoInputRef.current) photoInputRef.current.value = "";
   }
 
-  // Dynamic progress bar
   const progress = (() => {
     let score = 0;
     if (fullName) score += 15;
@@ -102,18 +104,17 @@ function PortfolioBuilder() {
   }
 
   function handleSaveDraft() {
-    localStorage.setItem("draftData", JSON.stringify(currentData));
+    localStorage.setItem(draftKey, JSON.stringify(currentData));
     alert("✅ Draft saved! You can continue editing later.");
   }
 
   async function handlePublish() {
     try {
       const dataToSave = { ...currentData };
-      // photo বাদ দিয়ে Firestore এ save করো (base64 too large)
       delete dataToSave.photo;
       await setDoc(doc(db, "portfolios", currentUser.uid), dataToSave);
-      localStorage.setItem("portfolioData", JSON.stringify(currentData));
-      localStorage.removeItem("draftData");
+      localStorage.setItem(userKey, JSON.stringify(currentData));
+      localStorage.removeItem(draftKey);
       alert("🎉 Portfolio Published!");
       navigate("/profile");
     } catch (error) {
@@ -150,12 +151,10 @@ function PortfolioBuilder() {
             <div className="progress-bar" style={{ width: `${progress}%`, transition: "width 0.4s ease" }}></div>
             <span className="progress-label">{progress}%</span>
           </div>
-
           <div className="form-section">
             <h2 className="section-title">🪪 Basic Information</h2>
             <p className="section-sub">Tell us about yourself</p>
             <div className="photo-row">
-              {/* Photo preview */}
               {photo ? (
                 <img src={photo} alt="Profile" style={{ width: "60px", height: "60px", borderRadius: "50%", objectFit: "cover" }} />
               ) : (
@@ -163,17 +162,8 @@ function PortfolioBuilder() {
               )}
               <div className="photo-actions">
                 <div>
-                  {/* Hidden file input */}
-                  <input
-                    type="file"
-                    accept="image/*"
-                    ref={photoInputRef}
-                    onChange={handlePhotoUpload}
-                    style={{ display: "none" }}
-                  />
-                  <button className="btn-upload" onClick={() => photoInputRef.current.click()}>
-                    Upload Photo
-                  </button>
+                  <input type="file" accept="image/*" ref={photoInputRef} onChange={handlePhotoUpload} style={{ display: "none" }} />
+                  <button className="btn-upload" onClick={() => photoInputRef.current.click()}>Upload Photo</button>
                   <button className="btn-remove" onClick={handleRemovePhoto}>Remove</button>
                 </div>
                 <p className="photo-hint">Recommended: Square image, at least 400x400px</p>
@@ -205,7 +195,6 @@ function PortfolioBuilder() {
               </div>
             </div>
           </div>
-
           <div className="form-section">
             <h2 className="section-title">💼 Skills</h2>
             <p className="section-sub">Add your technical and professional skills</p>
@@ -225,7 +214,6 @@ function PortfolioBuilder() {
             </div>
             <small>Press Enter or click Add to add skills</small>
           </div>
-
           <div className="form-section">
             <h2 className="section-title">🚀 Projects</h2>
             <p className="section-sub">Showcase your best work</p>
@@ -260,7 +248,6 @@ function PortfolioBuilder() {
             ))}
             <button className="btn-add-project" onClick={addProject}>+ Add Another Project</button>
           </div>
-
           <div className="form-section">
             <h2 className="section-title">🎓 Education</h2>
             <p className="section-sub">Add your educational background</p>
@@ -289,7 +276,6 @@ function PortfolioBuilder() {
               <input value={cgpa} onChange={e => setCgpa(e.target.value)} placeholder="3.75" style={{ maxWidth: "200px" }} />
             </div>
           </div>
-
           <div className="form-section">
             <h2 className="section-title">📋 Contact Information</h2>
             <p className="section-sub">How can people reach you?</p>
@@ -318,7 +304,6 @@ function PortfolioBuilder() {
               <input value={website} onChange={e => setWebsite(e.target.value)} placeholder="http://yourwebsite.com" style={{ maxWidth: "360px" }} />
             </div>
           </div>
-
           <div className="builder-actions">
             <button className="btn-cancel" onClick={() => navigate("/home")}>Cancel</button>
             <button className="btn-save-draft-bottom" onClick={handleSaveDraft}>Save as Draft</button>

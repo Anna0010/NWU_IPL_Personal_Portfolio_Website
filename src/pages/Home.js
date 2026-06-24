@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
+import { useAuth } from "../context/AuthContext";
 
 const portfolios = [
   {
@@ -46,8 +47,10 @@ function Home() {
   const [selectedProfile, setSelectedProfile] = useState(null);
   const navigate = useNavigate();
 
-  // Check if user already has a portfolio
-  const hasPortfolio = localStorage.getItem("portfolioData") !== null;
+  // Check if user already has a portfolio (user-specific)
+  const { currentUser } = useAuth();
+  const userKey = `portfolioData_${currentUser?.uid || "guest"}`;
+  const hasPortfolio = localStorage.getItem(userKey) !== null;
 
   function handleSearch() {
     navigate("/browse", { state: { searchTerm, selectedSkill, selectedLevel, selectedType } });
