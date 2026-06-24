@@ -46,12 +46,25 @@ function Home() {
   const [selectedProfile, setSelectedProfile] = useState(null);
   const navigate = useNavigate();
 
+  // Check if user already has a portfolio
+  const hasPortfolio = localStorage.getItem("portfolioData") !== null;
+
   function handleSearch() {
     navigate("/browse", { state: { searchTerm, selectedSkill, selectedLevel, selectedType } });
   }
 
   function handleKeyDown(e) {
     if (e.key === "Enter") handleSearch();
+  }
+
+  function handleCreatePortfolio() {
+    if (hasPortfolio) {
+      // Already has portfolio → go to edit
+      navigate("/portfolio-builder", { state: { edit: true } });
+    } else {
+      // No portfolio yet → create new
+      navigate("/portfolio-builder");
+    }
   }
 
   return (
@@ -91,7 +104,9 @@ function Home() {
         </div>
         <div className="hero-buttons">
           <button className="search-btn" onClick={handleSearch}>Search Now</button>
-          <button className="create-btn" onClick={() => navigate("/portfolio-builder")}>Create Portfolio</button>
+          <button className="create-btn" onClick={handleCreatePortfolio}>
+            {hasPortfolio ? "Edit Portfolio" : "Create Portfolio"}
+          </button>
         </div>
       </section>
 
@@ -127,7 +142,6 @@ function Home() {
               <button onClick={() => setSelectedProfile(null)} style={{ background: "none", border: "none", fontSize: "24px", cursor: "pointer", color: "#888" }}>×</button>
             </div>
             <div style={{ padding: "0 24px 32px" }}>
-              {/* Top card */}
               <div style={{ background: "#fff", borderRadius: "16px", padding: "24px", display: "flex", alignItems: "center", gap: "24px", marginBottom: "20px", boxShadow: "0 4px 20px rgba(74,111,165,0.1)", flexWrap: "wrap" }}>
                 <div style={{ width: "80px", height: "80px", borderRadius: "50%", background: "#4a6fa5", color: "#fff", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "28px", fontWeight: "700", fontFamily: "Playfair Display, serif" }}>{selectedProfile.initials}</div>
                 <div style={{ flex: 1 }}>
@@ -137,14 +151,10 @@ function Home() {
                   <p style={{ color: "#6b7280", fontSize: "13px", margin: "0" }}>✉️ {selectedProfile.fullProfile.contactEmail}</p>
                 </div>
               </div>
-
-              {/* About */}
               <div style={{ background: "#fff", borderRadius: "16px", padding: "24px", marginBottom: "16px", boxShadow: "0 2px 10px rgba(74,111,165,0.06)" }}>
                 <h3 style={{ fontFamily: "Playfair Display, serif", color: "#1a2540", marginBottom: "12px", paddingBottom: "10px", borderBottom: "2px solid #e8edf5" }}>👤 About Me</h3>
                 <p style={{ color: "#374151", lineHeight: "1.7", fontSize: "15px" }}>{selectedProfile.fullProfile.aboutMe}</p>
               </div>
-
-              {/* Skills */}
               <div style={{ background: "#fff", borderRadius: "16px", padding: "24px", marginBottom: "16px", boxShadow: "0 2px 10px rgba(74,111,165,0.06)" }}>
                 <h3 style={{ fontFamily: "Playfair Display, serif", color: "#1a2540", marginBottom: "12px", paddingBottom: "10px", borderBottom: "2px solid #e8edf5" }}>💡 Skills</h3>
                 <div style={{ display: "flex", flexWrap: "wrap", gap: "10px" }}>
@@ -153,8 +163,6 @@ function Home() {
                   ))}
                 </div>
               </div>
-
-              {/* Projects */}
               <div style={{ background: "#fff", borderRadius: "16px", padding: "24px", marginBottom: "16px", boxShadow: "0 2px 10px rgba(74,111,165,0.06)" }}>
                 <h3 style={{ fontFamily: "Playfair Display, serif", color: "#1a2540", marginBottom: "12px", paddingBottom: "10px", borderBottom: "2px solid #e8edf5" }}>🚀 Projects</h3>
                 {selectedProfile.fullProfile.projectList.map((p, i) => (
@@ -169,8 +177,6 @@ function Home() {
                   </div>
                 ))}
               </div>
-
-              {/* Education */}
               <div style={{ background: "#fff", borderRadius: "16px", padding: "24px", boxShadow: "0 2px 10px rgba(74,111,165,0.06)" }}>
                 <h3 style={{ fontFamily: "Playfair Display, serif", color: "#1a2540", marginBottom: "12px", paddingBottom: "10px", borderBottom: "2px solid #e8edf5" }}>🎓 Education</h3>
                 <div style={{ background: "#f8fafc", borderRadius: "10px", padding: "16px" }}>

@@ -1,6 +1,7 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider } from "./context/AuthContext";
+import { useAuth } from "./context/AuthContext";
 import PrivateRoute from "./components/PrivateRoute";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
@@ -11,14 +12,24 @@ import Profile from "./pages/Profile";
 import About from "./pages/About";
 import Contact from "./pages/Contact";
 
+// Login/Signup এ গেলে already logged in user কে Home এ পাঠাবে
+function PublicRoute({ children }) {
+  const { currentUser } = useAuth();
+  return currentUser ? <Navigate to="/home" replace /> : children;
+}
+
 function App() {
   return (
     <AuthProvider>
       <Router>
         <Routes>
           <Route path="/" element={<Navigate to="/login" replace />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<Signup />} />
+
+          {/* Public routes — login থাকলে home এ যাবে */}
+          <Route path="/login" element={<PublicRoute><Login /></PublicRoute>} />
+          <Route path="/signup" element={<PublicRoute><Signup /></PublicRoute>} />
+
+          {/* Private routes — login না থাকলে login এ যাবে */}
           <Route path="/home" element={<PrivateRoute><Home /></PrivateRoute>} />
           <Route path="/browse" element={<PrivateRoute><Browse /></PrivateRoute>} />
           <Route path="/portfolio-builder" element={<PrivateRoute><PortfolioBuilder /></PrivateRoute>} />
