@@ -37,8 +37,6 @@ function Profile() {
 
   async function handleLogout() {
     try {
-      localStorage.removeItem("portfolioData");
-      localStorage.removeItem("draftData");
       await logout();
       navigate("/login");
     } catch (error) {
