@@ -60,7 +60,7 @@ function Signup() {
           <div className="form-group">
             <label>Full Name</label>
             <div className="input-wrapper">
-              <input type="text" placeholder="Anna Parvin Sweety"
+              <input type="text" placeholder="Enter your full name"
                 value={fullName}
                 onChange={(e) => setFullName(e.target.value)} required />
             </div>
@@ -68,7 +68,7 @@ function Signup() {
           <div className="form-group">
             <label>Email Address</label>
             <div className="input-wrapper">
-              <input type="email" placeholder="Anna.Parvin.Sweety@gmail.com"
+              <input type="email" placeholder="your@email.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)} required />
             </div>
@@ -90,7 +90,7 @@ function Signup() {
             <label>Confirm Password</label>
             <div className="input-wrapper">
               <input type={showConfirm ? "text" : "password"}
-                placeholder="Confirm Your password"
+                placeholder="Confirm your password"
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)} required />
               <button type="button" className="eye-icon"

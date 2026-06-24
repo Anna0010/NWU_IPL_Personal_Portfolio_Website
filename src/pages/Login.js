@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import LeftPanel from "../components/LeftPanel";
+import { sendPasswordResetEmail } from "firebase/auth";
+import { auth } from "../firebase";
 
 function Login() {
   const [showPassword, setShowPassword] = useState(false);
@@ -10,6 +12,7 @@ function Login() {
   const [remember, setRemember] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [resetSent, setResetSent] = useState(false);
 
   const { login } = useAuth();
   const navigate = useNavigate();
@@ -27,6 +30,21 @@ function Login() {
     setLoading(false);
   }
 
+  async function handleForgotPassword(e) {
+    e.preventDefault();
+    if (!email) {
+      setError("Please enter your email address first.");
+      return;
+    }
+    try {
+      await sendPasswordResetEmail(auth, email);
+      setResetSent(true);
+      setError("");
+    } catch (err) {
+      setError("Could not send reset email. Please check your email address.");
+    }
+  }
+
   return (
     <div className="auth-layout">
       <LeftPanel />
@@ -40,6 +58,11 @@ function Login() {
           <Link to="/signup" className="tab-btn">Sign Up</Link>
         </div>
         {error && <div className="error-box">{error}</div>}
+        {resetSent && (
+          <div style={{ background: "#d4edda", color: "#155724", padding: "12px 16px", borderRadius: "10px", marginBottom: "14px", fontSize: "14px", textAlign: "center" }}>
+            ✅ Password reset email sent! Check your inbox.
+          </div>
+        )}
         <form className="auth-form" onSubmit={handleSubmit}>
           <div className="form-group">
             <label>Email Address</label>
@@ -58,7 +81,7 @@ function Login() {
             <div className="input-wrapper">
               <input
                 type={showPassword ? "text" : "password"}
-                placeholder="Enter your Password"
+                placeholder="Enter your password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
@@ -84,7 +107,8 @@ function Login() {
             <button type="button" className="btn-social">GitHub</button>
           </div>
           <div className="forgot-row">
-            Forgot password? <a href="#reset">Reset here</a>
+            Forgot password?{" "}
+            <a href="#reset" onClick={handleForgotPassword}>Reset here</a>
           </div>
         </form>
       </div>
