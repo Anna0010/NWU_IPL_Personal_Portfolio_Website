@@ -185,6 +185,15 @@ function Home() {
                   <p style={{ color: "#6b7280", fontSize: "13px", margin: "0" }}>{selectedProfile.fullProfile.startYear} – {selectedProfile.fullProfile.endYear} | CGPA: {selectedProfile.fullProfile.cgpa}</p>
                 </div>
               </div>
+
+              {/* Contact */}
+              <div style={{ background: "#fff", borderRadius: "16px", padding: "24px", marginTop: "16px", boxShadow: "0 2px 10px rgba(74,111,165,0.06)" }}>
+                <h3 style={{ fontFamily: "Playfair Display, serif", color: "#1a2540", marginBottom: "12px", paddingBottom: "10px", borderBottom: "2px solid #e8edf5" }}>📬 Contact</h3>
+                <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+                  <p style={{ color: "#374151", fontSize: "14px", margin: "0" }}>✉️ {selectedProfile.fullProfile.contactEmail}</p>
+                  {selectedProfile.fullProfile.phone && <p style={{ color: "#374151", fontSize: "14px", margin: "0" }}>📞 {selectedProfile.fullProfile.phone}</p>}
+                </div>
+              </div>
             </div>
           </div>
         </div>
